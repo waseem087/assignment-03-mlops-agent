@@ -13,3 +13,4 @@ kubeconfig*
 *.pem
 *.key
 *.egg-info/
+models/
