@@ -1,0 +1,22 @@
+services:
+  airflow:
+    build:
+      context: ./airflow
+    image: mlops-airflow:local
+    command: standalone
+    ports:
+      - "8080:8080"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      AIRFLOW__CORE__LOAD_EXAMPLES: "False"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "False"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_USERS: "airflow:admin"
+      AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_PASSWORDS_FILE: /opt/airflow/passwords.json
+      MLFLOW_TRACKING_URI: http://host.docker.internal:5000
+      PROJECT_DIR: /opt/airflow/project
+      PYTHONUTF8: "1"
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./airflow/passwords.json:/opt/airflow/passwords.json
+      - .:/opt/airflow/project
