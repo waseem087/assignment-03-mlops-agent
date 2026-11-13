@@ -7,9 +7,6 @@ __pycache__/
 mlruns/
 mlartifacts/
 *.db
-/data/*
-!/data/*.dvc
-!/data/.gitignore
 .dvc/cache
 .dvc/tmp
 kubeconfig*
