@@ -6,7 +6,7 @@ import time
 os.environ.setdefault("MLFLOW_HTTP_REQUEST_TIMEOUT", "10")
 os.environ.setdefault("MLFLOW_HTTP_REQUEST_MAX_RETRIES", "1")
 
-from mlflow.tracking import MlflowClient  # noqa: E402
+from mlflow.tracking import MlflowClient
 
 MLFLOW_URI = os.getenv("MLFLOW_TRACKING_URI", "http://localhost:5000")
 DEFAULT_EXPERIMENT = os.getenv("MLFLOW_EXPERIMENT", "mlops-agent")
@@ -151,4 +151,36 @@ def get_registry_info(model_name: str | None = None) -> dict:
                 {"version": v.version, "run_id": v.run_id, "status": v.status,
                  "aliases": list(getattr(v, "aliases", []) or [])} for v in versions]}
         models = c.search_registered_models()
-        return {"registered_models": [m.name for m in models], "count":
+        return {"registered_models": [m.name for m in models], "count": len(models),
+                "note": "Registry is empty." if not models else None}
+    except ToolError:
+        raise
+    except Exception as e:
+        raise ToolError(f"MLflow error: {e}") from e
+
+
+TOOLS = {
+    "list_experiments_and_runs": list_experiments_and_runs,
+    "get_run_details": get_run_details,
+    "find_best_run": find_best_run,
+    "compare_runs": compare_runs,
+    "get_registry_info": get_registry_info,
+}
+
+
+def timed_call(name: str, **kwargs) -> dict:
+    start = time.perf_counter()
+    try:
+        data, status, error = TOOLS[name](**kwargs), "ok", None
+    except (ToolError, TypeError, KeyError) as e:
+        data, status, error = None, "error", str(e)
+    return {"tool": name, "status": status, "error": error, "data": data,
+            "duration_ms": round((time.perf_counter() - start) * 1000, 1)}
+
+
+if __name__ == "__main__":
+    import json
+    for t, a in [("list_experiments_and_runs", {"max_runs": 5}),
+                 ("find_best_run", {"metric": "f1"}),
+                 ("get_registry_info", {})]:
+        print(json.dumps(timed_call(t, **a), indent=2)[:1500])

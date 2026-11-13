@@ -30,6 +30,10 @@ packages = ["agent", "agent.tools", "api"]
 [tool.ruff]
 line-length = 100
 
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+ignore = ["E402"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
