@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+.pytest_cache/
+.ruff_cache/
+mlruns/
+mlartifacts/
+*.db
+/data/*
+!/data/*.dvc
+!/data/.gitignore
+.dvc/cache
+.dvc/tmp
+kubeconfig*
+*.pem
+*.key
