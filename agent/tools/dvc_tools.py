@@ -30,7 +30,8 @@ def _run(cmd: list[str]) -> str:
         raise ToolError(f"command not allowed: {' '.join(cmd[:2])}")
     try:
         out = subprocess.run(
-            cmd, cwd=REPO_ROOT, capture_output=True, text=True, timeout=TIMEOUT
+            cmd, check=False, cwd=REPO_ROOT, capture_output=True, text=True,
+            timeout=TIMEOUT
         )
     except subprocess.TimeoutExpired as e:
         raise ToolError(f"timeout after {TIMEOUT}s: {cmd[0]} {cmd[1]}") from e
