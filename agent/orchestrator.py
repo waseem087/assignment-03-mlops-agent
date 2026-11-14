@@ -231,6 +231,8 @@ def rule_answer(message: str, request_id: str, confirm: bool):
             known.append(f"- {name}: {brief(res['data'], 900)}")
             if name == "find_best_run":
                 unknown.extend(f"- {c}" for c in res["data"].get("caveats", []))
+            if name == "find_best_run":
+                unknown.extend(f"- {c}" for c in res["data"].get("caveats", []))
             if name == "diagnose_deployment" and res["data"].get("warning_events"):
                 unknown.append("- Warning events listed above are historical records, "
                                "not necessarily current faults; current state is in findings.")
