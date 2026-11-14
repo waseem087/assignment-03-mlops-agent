@@ -1,0 +1,7 @@
+.venv
+.git
+mlartifacts
+mlflow.db
+work
+data
+models/model.joblib

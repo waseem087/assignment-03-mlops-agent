@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inference-config
+  namespace: mlops-agent
+data:
+  N_FEATURES: "10"
+  MODEL_PATH: "/app/model/model.joblib"
+  LOG_LEVEL: "info"
